@@ -1,4 +1,4 @@
-module redigoutils
+module github.com/shamogulang/redigo-utils
 
 go 1.25.1
 
