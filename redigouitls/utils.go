@@ -3,7 +3,6 @@ package redigouitls
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -90,7 +89,7 @@ func GetString(key string) (string, error) {
 
 func GetInt(key string) (int, error) {
 	var i int
-	err := Get(key, i)
+	err := Get(key, &i)
 	if err != nil {
 		return 0, err
 	}
@@ -99,7 +98,7 @@ func GetInt(key string) (int, error) {
 
 func GetBool(key string) (bool, error) {
 	var b bool
-	err := Get(key, b)
+	err := Get(key, &b)
 	if err != nil {
 		return false, err
 	}
@@ -122,7 +121,6 @@ func Get(key string, v interface{}) error {
 	}
 	defer conn.Close()
 	data, err := redis.Bytes(conn.Do("GET", key))
-	fmt.Println(data)
 	if err != nil {
 		return err
 	}
@@ -195,14 +193,20 @@ func HgetString(key, field string) (string, error) {
 	return s, err
 }
 
-func HgetInt(key, field string, v interface{}) (int, error) {
+func HgetInt(key, field string) (int, error) {
 	var i int
 	err := Hget(key, field, &i)
 	return i, err
 }
 
-func HgetBool(key, field string, v interface{}) (bool, error) {
+func HgetBool(key, field string) (bool, error) {
 	var b bool
 	err := Hget(key, field, &b)
 	return b, err
+}
+
+func HgetT[T any](key, field string) (*T, error) {
+	var t T
+	err := Hget(key, field, &t)
+	return &t, err
 }
