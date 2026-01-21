@@ -186,7 +186,6 @@ func Hget(key, field string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	time.Sleep(1 * time.Hour)
 	return json.Unmarshal(data, v)
 }
 
